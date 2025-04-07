@@ -1,0 +1,9 @@
+# Ignorar arquivos temporários
+*.log
+*.tmp
+
+# Ignorar diretórios
+node_modules/
+dist/
+.env
+firebase-credentials.json

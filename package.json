@@ -1,0 +1,13 @@
+{
+  "name": "fintechai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "FinTechAI é uma API robusta para análise técnica de mercados financeiros potencializada por inteligência artificial. Desenvolvida com arquitetura limpa e princípios de design sólidos, esta API combina análise técnica tradicional com IA avançada para gerar sinais de trading de alta qualidade."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
