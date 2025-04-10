@@ -89,17 +89,38 @@ class MarketDataScheduler {
                     item.timeframe,
                     100,
                     item.provider
-                );
+                ).catch(err => {
+                    console.error(`Erro ao obter dados para ${item.symbol}:`, err.message);
+                    return null;
+                });
+
+                // Verificar se temos dados válidos
+                if (!data || !Array.isArray(data) || data.length === 0) {
+                    console.error(`Não foi possível obter dados válidos para ${item.symbol}`);
+                    continue; // Pula para o próximo item
+                }
 
                 // Realizar análise
                 const analysis = await this.marketAnalysisService.generateTradingSignals({
                     symbol: item.symbol,
                     timeframe: item.timeframe,
-                    data
+                    data: data
+                }).catch(err => {
+                    console.error(`Erro na análise para ${item.symbol}:`, err.message);
+                    return null;
                 });
 
+                // Verificar se temos análise válida
+                if (!analysis) {
+                    console.error(`Análise inválida para ${item.symbol}`);
+                    continue; // Pula para o próximo item
+                }
+
                 // Salvar no repositório
-                await this.tradingSignalRepository.saveAnalysis(analysis);
+                if (this.tradingSignalRepository) {
+                    await this.tradingSignalRepository.saveAnalysis(analysis)
+                        .catch(err => console.error(`Erro ao salvar análise para ${item.symbol}:`, err.message));
+                }
 
                 // Atualizar timestamp da última atualização
                 item.lastUpdate = new Date().toISOString();
@@ -116,3 +137,5 @@ class MarketDataScheduler {
         console.log('Atualização agendada concluída');
     }
 }
+
+module.exports = MarketDataScheduler;
