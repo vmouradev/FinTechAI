@@ -1,3 +1,5 @@
+const FirestoreRepository = require('./firestoreRepository');
+
 class TradingSignalRepository extends FirestoreRepository {
     constructor() {
         super('trading_signals');
@@ -94,3 +96,5 @@ class TradingSignalRepository extends FirestoreRepository {
         }
     }
 }
+
+module.exports = TradingSignalRepository;

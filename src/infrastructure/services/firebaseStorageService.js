@@ -125,3 +125,4 @@ class FirebaseStorageService {
   }
 }
 
+module.exports = FirebaseStorageService;

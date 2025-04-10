@@ -236,3 +236,5 @@ class FirestoreRepository {
         }
     }
 }
+
+module.exports = FirestoreRepository;

@@ -1,3 +1,5 @@
+const FirestoreRepository = require('./firestoreRepository');
+
 class MarketDataRepository extends FirestoreRepository {
     constructor() {
         super('market_analyses');
@@ -30,3 +32,5 @@ class MarketDataRepository extends FirestoreRepository {
         }
     }
 }
+
+module.exports = MarketDataRepository;
