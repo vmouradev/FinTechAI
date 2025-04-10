@@ -1,3 +1,9 @@
+// Importar os repositórios e serviços
+const FirestoreRepository = require('./repositories/firestoreRepository');
+const MarketDataRepository = require('./repositories/marketDataRepository');
+const TradingSignalRepository = require('./repositories/tradingSignalRepository');
+const FirebaseStorageService = require('./services/firebaseStorageService');
+
 // Exporta todos os repositórios e serviços para fácil importação
 module.exports = {
     FirestoreRepository,
