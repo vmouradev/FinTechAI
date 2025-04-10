@@ -1,3 +1,37 @@
+// Importar repositórios diretamente
+const MarketDataRepository = require('./src/infrastructure/repositories/marketDataRepository');
+const TradingSignalRepository = require('./src/infrastructure/repositories/tradingSignalRepository');
+const FirebaseStorageService = require('./src/infrastructure/services/firebaseStorageService');
+
+// Instanciar repositórios (use let em vez de const)
+let marketDataRepository;
+let tradingSignalRepository;
+let storageService;
+
+try {
+    marketDataRepository = new MarketDataRepository();
+    console.log("MarketDataRepository instanciado com sucesso");
+} catch (error) {
+    console.error("Erro ao instanciar MarketDataRepository:", error);
+    marketDataRepository = null;
+}
+
+try {
+    tradingSignalRepository = new TradingSignalRepository();
+    console.log("TradingSignalRepository instanciado com sucesso");
+} catch (error) {
+    console.error("Erro ao instanciar TradingSignalRepository:", error);
+    tradingSignalRepository = null;
+}
+
+try {
+    storageService = new FirebaseStorageService();
+    console.log("FirebaseStorageService instanciado com sucesso");
+} catch (error) {
+    console.error("Erro ao instanciar FirebaseStorageService:", error);
+    storageService = null;
+}
+
 require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
@@ -34,17 +68,6 @@ app.use(logRequest);
 // Importar modelo de dados
 const MarketData = require('./src/domain/models/MarketData');
 
-// Importar repositórios
-const {
-    MarketDataRepository,
-    TradingSignalRepository,
-    FirebaseStorageService
-} = require('./src/infrastructure');
-
-// Instanciar repositórios
-const marketDataRepository = new MarketDataRepository();
-const tradingSignalRepository = new TradingSignalRepository();
-const storageService = new FirebaseStorageService();
 
 // Inicializar serviços
 const GeminiAIClient = require('./src/config/gemini');

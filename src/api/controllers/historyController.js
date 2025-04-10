@@ -86,3 +86,5 @@ class HistoryController {
         }
     }
 }
+
+module.exports = HistoryController;

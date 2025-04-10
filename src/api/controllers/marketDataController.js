@@ -178,3 +178,6 @@ class MarketDataController {
         }
     }
 }
+
+// Exportar o controlador
+module.exports = MarketDataController;

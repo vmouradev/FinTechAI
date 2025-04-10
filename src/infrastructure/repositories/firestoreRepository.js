@@ -1,3 +1,5 @@
+// src/infrastructure/repositories/firestoreRepository.js
+
 const { Firestore } = require('@google-cloud/firestore');
 
 class FirestoreRepository {
@@ -205,11 +207,13 @@ class FirestoreRepository {
 
             analyses.forEach(analysis => {
                 // Incrementa contador de sinal
-                const signal = analysis.trading_signal.signal;
-                signals[signal] = (signals[signal] || 0) + 1;
+                if (analysis.trading_signal && analysis.trading_signal.signal) {
+                    const signal = analysis.trading_signal.signal;
+                    signals[signal] = (signals[signal] || 0) + 1;
 
-                // Soma confiança
-                confidenceSum += analysis.trading_signal.confidence || 0;
+                    // Soma confiança
+                    confidenceSum += analysis.trading_signal.confidence || 0;
+                }
             });
 
             // Calcula média de confiança

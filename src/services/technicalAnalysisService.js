@@ -280,3 +280,5 @@ class TechnicalAnalysisService {
         };
     }
 }
+
+module.exports = TechnicalAnalysisService;

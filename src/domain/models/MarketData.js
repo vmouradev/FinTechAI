@@ -34,3 +34,5 @@ class MarketData {
         return true;
     }
 }
+
+module.exports = MarketData;

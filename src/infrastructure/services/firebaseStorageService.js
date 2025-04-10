@@ -1,3 +1,5 @@
+// src/infrastructure/services/firebaseStorageService.js
+
 const { Storage } = require('@google-cloud/storage');
 
 class FirebaseStorageService {

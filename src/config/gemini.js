@@ -31,3 +31,5 @@ class GeminiAIClient {
         }
     }
 }
+
+module.exports = GeminiAIClient;

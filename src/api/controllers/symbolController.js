@@ -71,3 +71,5 @@ class SymbolController {
         }
     }
 }
+
+module.exports = SymbolController;
