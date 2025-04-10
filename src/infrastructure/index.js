@@ -45,7 +45,7 @@ function initializeFirebase() {
         // Sem credenciais - útil para desenvolvimento local ou ambiente de testes
         else {
             admin.initializeApp({
-                projectId: process.env.FIREBASE_PROJECT_ID || 'fintechai-analyzer',
+                projectId: process.env.FIREBASE_PROJECT_ID || 'fintechai',
                 storageBucket: process.env.FIREBASE_STORAGE_BUCKET
             });
         }
