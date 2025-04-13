@@ -12,7 +12,7 @@ class MarketDataController {
      */
     async fetchAndAnalyze(req, res) {
         try {
-            const { symbol, timeframe, limit, provider } = req.body;
+            const { symbol, timeframe, limit, provider, useTestData } = req.body;
 
             if (!symbol) {
                 return res.status(400).json({
@@ -20,6 +20,45 @@ class MarketDataController {
                     error: 'Símbolo é obrigatório'
                 });
             }
+
+            // Usar dados de teste se solicitado
+            if (useTestData === true) {
+                console.log("Usando dados simulados para teste");
+                const testData = this.generateTestData(symbol, timeframe || '1d');
+
+                // Análise usando dados de teste
+                const analysisReq = {
+                    body: {
+                        symbol,
+                        timeframe: timeframe || '1d',
+                        data: testData
+                    }
+                };
+
+                const analysisRes = {
+                    status: function (code) {
+                        this.statusCode = code;
+                        return this;
+                    },
+                    json: function (data) {
+                        this.data = data;
+                        return this;
+                    }
+                };
+
+                await this.marketAnalysisController.analyzeMarket(analysisReq, analysisRes);
+
+                return res.status(200).json({
+                    success: true,
+                    source: 'simulated_data',
+                    dataPoints: testData.length,
+                    analysis: analysisRes.data,
+                    note: "Dados simulados para desenvolvimento e teste"
+                });
+            }
+
+
+            // DADOS REAIS
 
             const parsedLimit = limit ? parseInt(limit, 10) : 100;
 
@@ -89,6 +128,46 @@ class MarketDataController {
             });
         }
     }
+
+    // Método para gerar dados simulados para testes
+    generateTestData(symbol, timeframe) {
+        const numCandles = 100;
+        const data = [];
+        let basePrice = symbol === 'BTC' ? 50000 : (symbol === 'AAPL' ? 180 : 350);
+        let volatility = symbol === 'BTC' ? 500 : 3;
+
+        const now = new Date().getTime();
+        let timestamp = now - (numCandles * 24 * 60 * 60 * 1000); // Dias para trás
+
+        if (timeframe === '1h') {
+            timestamp = now - (numCandles * 60 * 60 * 1000); // Horas para trás
+        } else if (timeframe === '4h') {
+            timestamp = now - (numCandles * 4 * 60 * 60 * 1000); // 4 horas para trás
+        }
+
+        for (let i = 0; i < numCandles; i++) {
+            const change = (Math.random() - 0.5) * volatility;
+            const open = basePrice;
+            const close = basePrice + change;
+            const high = Math.max(open, close) + Math.random() * volatility * 0.5;
+            const low = Math.min(open, close) - Math.random() * volatility * 0.5;
+            const volume = Math.floor(Math.random() * 10000) + 1000;
+
+            data.push({
+                timestamp: timestamp + (i * (timeframe === '1h' ? 60 * 60 * 1000 : (timeframe === '4h' ? 4 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000))),
+                open,
+                high,
+                low,
+                close,
+                volume
+            });
+
+            basePrice = close; // O preço do próximo dia começa onde o anterior terminou
+        }
+
+        return data;
+    }
+
 
     /**
      * Coleta e armazena dados históricos para um símbolo

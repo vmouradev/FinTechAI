@@ -32,6 +32,8 @@ try {
     storageService = null;
 }
 
+
+
 require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
@@ -106,10 +108,11 @@ const marketRoutes = require('./src/api/routes/marketRoutes');
 const historyRoutes = require('./src/api/routes/historyRoutes');
 const symbolRoutes = require('./src/api/routes/symbolRoutes');
 const marketDataRoutes = require('./src/api/routes/marketDataRoutes');
+const { templateSettings } = require('lodash');
 
 // Configurar rotas
 app.use('/api/market', validateRequest, marketRoutes(marketAnalysisController));
-app.use('/api/history', historyRoutes(historyController));
+// app.use('/api/history', historyRoutes(historyController));
 app.use('/api/symbols', symbolRoutes(symbolController));
 app.use('/api/market-data', marketDataRoutes(marketDataController));
 
@@ -117,7 +120,7 @@ app.use('/api/market-data', marketDataRoutes(marketDataController));
 app.get('/', (req, res) => {
     res.json({
         status: 'online',
-        application: 'FinTechAI-Analyzer',
+        application: 'FinTechAI',
         version: '1.0.0'
     });
 });
@@ -131,23 +134,37 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Inicializar o agendador de dados de mercado
-const MarketDataScheduler = require('./src/utils/marketDataScheduler');
-const scheduler = new MarketDataScheduler(
-    marketDataService,
-    technicalAnalysisService,
-    tradingSignalRepository
-);
+// // Inicializar o agendador de dados de mercado
+// const MarketDataScheduler = require('./src/utils/marketDataScheduler');
+// const scheduler = new MarketDataScheduler(
+//     marketDataService,
+//     technicalAnalysisService,
+//     tradingSignalRepository
+// );
 
-// Adicionar alguns ativos de exemplo à watchlist
-scheduler.addToWatchlist({ symbol: 'AAPL', timeframe: '1d' });
-scheduler.addToWatchlist({ symbol: 'MSFT', timeframe: '1d' });
-scheduler.addToWatchlist({ symbol: 'BTC/USD', timeframe: '1d', provider: 'coingecko' });
+// // Adicionar alguns ativos de exemplo à watchlist
+// scheduler.addToWatchlist({ symbol: 'AAPL', timeframe: '1d' });
+// scheduler.addToWatchlist({ symbol: 'MSFT', timeframe: '1d' });
+// scheduler.addToWatchlist({ symbol: 'BTC', timeframe: '1d', provider: 'coingecko' });
 
-// Iniciar o agendador (a cada 15 minutos)
-scheduler.start('*/15 * * * *');
+// // Iniciar o agendador (a cada 15 minutos)
+// scheduler.start('*/15 * * * *');
 
 // Iniciar servidor - deve ser o último passo
 app.listen(PORT, () => {
-    console.log(`FinTechAI-Analyzer API running on port ${PORT}`);
+    console.log(`FinTechAI API running on port ${PORT}`);
+});
+
+app.get('/api/test', (req, res) => {
+    res.json({
+        status: 'online',
+        timestamp: new Date().toISOString(),
+        message: 'FinTechAI API está funcionando corretamente!',
+        endpoints: {
+            market_analysis: '/api/market/analyze',
+            market_data: '/api/market-data/fetch-and-analyze',
+            symbols: '/api/symbols/search?query=bitcoin',
+            providers: '/api/market-data/providers'
+        }
+    });
 });

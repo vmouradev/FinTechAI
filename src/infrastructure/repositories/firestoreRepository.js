@@ -1,22 +1,23 @@
 // src/infrastructure/repositories/firestoreRepository.js
-
+const path = require('path');
 const { Firestore } = require('@google-cloud/firestore');
+
+// TODO: Remover o instanciamento direto no construtor
+// e usar injeção de dependência
 
 class FirestoreRepository {
     constructor(collectionName) {
-        // Inicializa o Firestore
         this.firestore = new Firestore({
-            projectId: process.env.FIREBASE_PROJECT_ID,
-            keyFilename: process.env.FIREBASE_KEY_PATH,
+            projectId: 'fintechai-28961',
+            keyFilename: path.resolve(__dirname, '../../../firebase-credentials.json'),
         });
         this.collection = this.firestore.collection(collectionName);
     }
-
     /**
-     * Salva uma análise de mercado no Firestore
-     * @param {Object} analysis - Objeto contendo a análise de mercado
-     * @returns {Promise<string>} - ID do documento criado
-     */
+       * Salva uma análise de mercado no Firestore
+       * @param {Object} analysis - Objeto contendo a análise de mercado
+       * @returns {Promise<string>} - ID do documento criado
+       */
     async saveAnalysis(analysis) {
         try {
             // Adiciona timestamp se não existir

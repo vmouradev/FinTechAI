@@ -594,6 +594,31 @@ class TwelveDataProvider extends MarketDataProvider {
             throw new Error(`Falha ao buscar símbolos: ${error.message}`);
         }
     }
+
+    /**
+ * Tenta obter dados de vários provedores até ter sucesso
+ * @param {string} symbol - Símbolo do ativo
+ * @param {string} timeframe - Timeframe
+ * @param {number} limit - Limite de candles
+ * @returns {Promise<Array>} - Dados OHLCV
+ */
+    async getOHLCVWithFallback(symbol, timeframe, limit) {
+        const providerNames = Object.keys(this.providers);
+
+        for (const providerName of providerNames) {
+            try {
+                console.log(`Tentando obter dados de ${symbol} com o provedor ${providerName}...`);
+                const data = await this.providers[providerName].getOHLCV(symbol, timeframe, limit);
+                console.log(`Dados obtidos com sucesso de ${providerName}`);
+                return data;
+            } catch (error) {
+                console.error(`Falha ao obter dados de ${providerName}: ${error.message}`);
+                // Continua para o próximo provedor
+            }
+        }
+
+        throw new Error(`Não foi possível obter dados para ${symbol} de nenhum provedor`);
+    }
 }
 
 /**
